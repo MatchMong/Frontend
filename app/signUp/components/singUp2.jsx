@@ -7,6 +7,11 @@ export const SignUp2 = () => {
     const [number, setNumber] = useState("");
     const router = useRouter();
 
+    const handleBack = () => {
+        if (window.history.length > 1) router.back();
+        else router.push("/");
+    };
+
     const handleNumberChange = (e) => {
         setNumber(e.target.value);
     }
@@ -16,7 +21,7 @@ export const SignUp2 = () => {
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-linear-to-br from-[#DCE2FF] to-[#F4F9FF]">
             <div className="w-[524px] h-auto bg-white rounded-xl p-3.5">
-                <img src="/icon/leftArrow.svg" alt="Arrow" width={42}/>
+                <img src="/icon/leftArrow.svg" alt="Arrow" width={42} onClick={handleBack}/>
                 <div className="w-full flex items-center justify-center">
                     <img src="/icon/M&M.svg" alt="M&M" width={210} />
                 </div>

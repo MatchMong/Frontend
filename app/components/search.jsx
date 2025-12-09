@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const INPUT = ({
+export const SEARCH = ({
   label,
   maxlength,
   iconSrc,
@@ -24,7 +24,7 @@ export const INPUT = ({
       : "pl-6 pr-12"
     : "px-6";
 
-  const iconPositionClass = isLeft ? "left-4" : "right-4";
+  const iconPositionClass = isLeft ? "left-3" : "right-3";
   const iconSizeStyle = {
     width: `${iconSize}px`,
     height: `${iconSize}px`,
@@ -41,13 +41,13 @@ export const INPUT = ({
   };
 
   return (
-    <div className="w-[calc(100%-48px)] box-border m-6">
+    <div className="w-full box-border">
       <p className="ml-3 mb-2">{label}</p>
 
       {error && (
         <div className="relative">
             <input
-              className={`w-full bg-white box-border h-[63px] rounded-2xl border-2 border-[#E54747] pl-[23px] py-5 ${iconPadding} text-[#777C89] font-pretendard font-medium placeholder:text-[#777C89] placeholder:font-pretendard placeholder:font-medium`}
+              className={`w-full bg-white box-border h-[63px] rounded-xl border-2 border-[#E54747] pl-[23px] py-5 ${iconPadding} text-[#777C89] font-pretendard font-medium placeholder:text-[#777C89] placeholder:font-pretendard placeholder:font-medium`}
               maxLength={maxlength}
               {...inputProps}
             />
@@ -73,7 +73,7 @@ export const INPUT = ({
       {!error && (
       <div className="relative">
         <input
-          className={`w-full bg-white box-border h-[63px] rounded-2xl border border-[#d9d9d9] py-5 ${iconPadding} text-[#777C89] placeholder:text-[#777C89]`}
+          className={`w-full bg-white box-border h-12 rounded-xl py-5 ${iconPadding} text-[#777C89] placeholder:text-[#777C89] shadow-[0_4px_4px_1px_rgba(0,0,0,0.08)]`}
           maxLength={maxlength}
           {...inputProps}
         />

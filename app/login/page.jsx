@@ -10,6 +10,11 @@ export default function LoginPage () {
     const [loginError, setLoginError] = useState(false);
     const router = useRouter();
 
+    const handleBack = () => {
+        if (window.history.length > 1) router.back();
+        else router.push("/");
+    };
+
     const showPassword = () => {
         if (eyes === "/icon/offeyes.svg") {
             setEyes("/icon/openeyes.svg");
@@ -24,7 +29,7 @@ export default function LoginPage () {
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-linear-to-br from-[#DCE2FF] to-[#F4F9FF]">
             <div className="w-[524px] h-[574px] bg-white rounded-xl p-3.5">
-                <img src="/icon/leftArrow.svg" alt="Arrow" width={42}/>
+                <img src="/icon/leftArrow.svg" alt="Arrow" width={42} onClick={handleBack}/>
                 <div className="w-full flex items-center justify-center">
                     <img src="/icon/M&M.svg" alt="M&M" width={210} />
                 </div>

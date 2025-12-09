@@ -17,6 +17,11 @@ export const SignUp3 = () => {
     
     const passwordsMatch = password1 === password2 && password2.length > 0;
     const showError = password2Touched && password2.length > 0 && !passwordsMatch;
+
+    const handleBack = () => {
+        if (window.history.length > 1) router.back();
+        else router.push("/");
+    };
     
     const handleIdChange = (e) => {
         setId(e.target.value);
@@ -52,7 +57,7 @@ export const SignUp3 = () => {
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-linear-to-br from-[#DCE2FF] to-[#F4F9FF]">
             <div className="w-[524px] h-auto bg-white rounded-xl p-3.5">
-                <img src="/icon/leftArrow.svg" alt="Arrow" width={42}/>
+                <img src="/icon/leftArrow.svg" alt="Arrow" width={42} onClick={handleBack}/>
                 <div className="w-full flex items-center justify-center">
                     <img src="/icon/M&M.svg" alt="M&M" width={210} />
                 </div>
@@ -90,7 +95,7 @@ export const SignUp3 = () => {
                     onChange={handlePasswordChange1}
                 />
                 <INPUT 
-                    label="비밀번호"
+                    label="비밀번호 확인"
                     type={passwordVisible2 ? "text" : "password"}
                     iconSrc={eyes2}
                     iconSize={28}
@@ -100,6 +105,7 @@ export const SignUp3 = () => {
                     errorMessage={"비밀번호가 틀렸습니다."}
                     placeholder="비밀번호를 입력해주세요"
                     onChange={handlePasswordChange2}
+                    onFocus={() => setPassword2Touched(false)}
                     onBlur={() => setPassword2Touched(true)}
                     value={password2}
                 />
