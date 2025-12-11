@@ -1,4 +1,4 @@
-export const POST = ({title, label, user, ...postProps}) => {
+export const POST = ({title, label, user, onUserClick,...postProps}) => {
 
 
     return(
@@ -8,6 +8,7 @@ export const POST = ({title, label, user, ...postProps}) => {
                     title={title}
                     label={label}
                     user={user}
+                    onUserClick={onUserClick}
                 />
             </div>
             <div className="w-full flex justify-center">
@@ -19,7 +20,7 @@ export const POST = ({title, label, user, ...postProps}) => {
     )
 }
 
-export const PostHeader = ({title, label, user,}) => {
+export const PostHeader = ({title, label, user, onUserClick}) => {
     return(
         <div>
             <div className="flex items-center">
@@ -34,7 +35,7 @@ export const PostHeader = ({title, label, user,}) => {
             <p className="pt-3 pb-4 text-[#777B86] text-xs font-medium font-pretendard">설명</p>
             <div className="flex flex-row justify-start items-center gap-1">
                 <img src="./icon/user(gray).svg"/>
-                <p className="text-[#777B86] text-[14px] font-pretendard font-medium">{user}명의 인원</p>
+                <p onClick={onUserClick} className="text-[#777B86] text-[14px] font-pretendard font-medium cursor-pointer">{user}명의 인원</p>
             </div>
         </div>
     )

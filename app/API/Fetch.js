@@ -1,5 +1,5 @@
 export const FetchPost = async (path, data) => {
-    const API_URL = process.env.REACT_APP_PUBLIC_API_URL;
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     try {
         const header = {
             "Content-Type": "application/json",
@@ -27,11 +27,10 @@ export const FetchPost = async (path, data) => {
 }
 
 export const FetchGet = async (path) => {
-  const API_URL = process.env.REACT_APP_PUBLIC_API_URL;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   try {
     const header = {
       "Content-Type": "application/json",
-      "ngrok-skip-browser-warning": "true",
     };
 
     const response = await fetch(`${API_URL}${path}`, {

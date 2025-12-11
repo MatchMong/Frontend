@@ -6,6 +6,7 @@ export const SimpleCalendar = ({
   value,
   onChange,
   className = "",
+  onClick,
 }) => {
   const today = new Date()
 
