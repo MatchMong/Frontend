@@ -2,9 +2,10 @@
 import { CIRCLE, INPUT, BUTTON } from "../../components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FetchPost } from "../../API/Fetch";
 
-export const SignUp2 = () => {
-    const [number, setNumber] = useState("");
+export const SignUp2 = ({ success, email }) => {
+    const [code, setCode] = useState("");
     const router = useRouter();
 
     const handleBack = () => {
@@ -12,11 +13,24 @@ export const SignUp2 = () => {
         else router.push("/");
     };
 
-    const handleNumberChange = (e) => {
-        setNumber(e.target.value);
+    const handleCodeChange = (e) => {
+        const valueC = e.target.value
+        const rpC = valueC.replace(/[^0-9]/g, "");
+        setCode(rpC);
     }
 
-    const numberValid = number.length === 6;
+    const verifyCode = async () => {
+        try {
+            await FetchPost("/sign-up", {
+                code
+            })
+            success(true)
+        } catch {
+            success(false)
+        }
+    }
+
+    const codeValid = code.length === 6;
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-linear-to-br from-[#DCE2FF] to-[#F4F9FF]">
@@ -47,11 +61,13 @@ export const SignUp2 = () => {
                     type="text"
                     maxlength={6}
                     placeholder="인증번호를 입력해 주세요"
-                    onChange={handleNumberChange}
+                    onChange={handleCodeChange}
+                    value={code}
                 />
                 <BUTTON
                     label="다음"
-                    activate={numberValid}
+                    activate={codeValid}
+                    onClick={verifyCode}
                 />
                 <p className="text-center text-[#777C89] font-medium mb-15">이미 계정이 있으신가요? <a onClick={() => router.push("/login")} className="text-[#3290FF] underline cursor-pointer font-medium">로그인</a></p>
             </div>

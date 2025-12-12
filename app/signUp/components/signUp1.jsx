@@ -2,8 +2,9 @@
 import { CIRCLE, INPUT, BUTTON } from "../../components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FetchPost } from "../../API/Fetch";
 
-export const SignUp1 = () => {
+export const SignUp1 = ({ success, selectedEmail }) => {
     const [email, setEmail] = useState("");
     const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     const router = useRouter();
@@ -16,6 +17,18 @@ export const SignUp1 = () => {
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
+
+    const clickButton = async () => {
+        selectedEmail(email);
+        try {
+            await FetchPost("/sign-up", {
+                email
+            });
+            success(true);
+        }catch{
+            success(false);
+        }
+    }
 
     const emailValid = isValidEmail(email);
 
@@ -52,6 +65,7 @@ export const SignUp1 = () => {
                 <BUTTON
                     label="인증번호 발송"
                     activate={emailValid}
+                    onClick={clickButton}
                 />
                 <p className="text-center text-[#777C89] font-medium mb-15">이미 계정이 있으신가요? <a onClick={() => router.push("/login")} className="text-[#3290FF] underline cursor-pointer font-medium">로그인</a></p>
             </div>
