@@ -29,7 +29,6 @@ export default function LoginPage () {
     }
 
     const handleLogin = async () => {
-        alert(id + password)
         await FetchPost("/login", {
             id,
             password,

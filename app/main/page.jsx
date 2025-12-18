@@ -1,8 +1,9 @@
 'use client';
 import { SEARCH, SimpleCalendar, POST } from "@/app/components/";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, useEffect } from "react";
 import { CreateRoom, UserList, UserCard } from "./Modal/";
 import { useRouter } from "next/navigation";
+import { FetchGet } from "../API/Fetch";
 
 export default function HomePage() {
     const gridRef = useRef(null);
@@ -10,6 +11,7 @@ export default function HomePage() {
     const [userModal, setUserModal] = useState(false);
     const [roomModal, setRoomModal] = useState(false);
     const [userList, setUserList] = useState(false);
+    const [post, setPost] = useState("");
     const router = useRouter();
 
     const getGridHeight = () => {
@@ -17,6 +19,19 @@ export default function HomePage() {
         if (!el) return 0;
         return Math.ceil(el.getBoundingClientRect().height);
     };
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const res = await FetchGet('/main');
+    //                 setPost(res);
+    //         } catch(error) {
+    //             console.log("게시물 목록 불러오기 실패: " + error)
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, [])
 
     useLayoutEffect(() => {
         setGridHeight(getGridHeight());
@@ -111,11 +126,18 @@ export default function HomePage() {
                 </div>
                 <div ref={gridRef} className="w-full ml-15 grid grid-cols-2 gap-x-12 gap-y-13 overflow-y-auto pr-2" style={{ gridAutoRows: `${(gridHeight-52)/2}px` }}>
                     <POST
+                        title={"1234"}
                         onUserClick={handleUserClick}
                     />
-                    <POST />
-                    <POST />
-                    <POST />
+                    <POST 
+                        onUserClick={handleUserClick}
+                    />
+                    <POST 
+                        onUserClick={handleUserClick}
+                    />
+                    <POST 
+                        onUserClick={handleUserClick}
+                    />
                 </div>
             </div>
             <div className="w-full h-22"></div>

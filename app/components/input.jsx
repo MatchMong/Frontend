@@ -21,8 +21,8 @@ export const INPUT = ({
 
   const iconPadding = hasIcon
     ? isLeft
-      ? "pl-12 pr-6"
-      : "pl-6 pr-12"
+      ? "pl-12 pr-4"
+      : "pl-4 pr-12"
     : "px-6";
 
   const iconPositionClass = isLeft ? "left-4" : "right-4";

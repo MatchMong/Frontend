@@ -7,9 +7,14 @@ export default function UserList() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await FetchGet('/members');
-            setData(result);
-        }
+            try {
+                const result = await FetchGet('/members');
+                setData(result);
+            } catch(error) {
+                console.log("유저 목록 실패: " + error)
+            }
+        };
+
         fetchData();
     }, []);
 
