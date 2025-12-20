@@ -1,0 +1,11 @@
+{
+  "name": "project2-root",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix ./project2 run dev",
+    "build": "npm --prefix ./project2 run build",
+    "start": "npm --prefix ./project2 run start",
+    "lint": "npm --prefix ./project2 run lint"
+  }
+}
