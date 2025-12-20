@@ -22,6 +22,7 @@ export default function Modal({ onClose }) {
         console.error("서버 응답이 좋지 않습니다.", error);
         setError(true);
   }
+  {error && <p>데이터를 불러오는 중 오류가 발생했습니다.</p>}
 }}, []);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -57,7 +58,6 @@ export default function Modal({ onClose }) {
           <p className="fixed text-[#777B86] mt-[36px] ml-[72px] text-[14px]">사용자 전공{data?.major}</p>
         </div>
   )}
-      {error && <p>데이터를 불러오는 중 오류가 발생했습니다.</p>}
     </div>
   </div>
 );
