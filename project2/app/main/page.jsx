@@ -1,7 +1,6 @@
 "use client";
-
-import { useState } from "react";
 import Modal from "./Modal";
+import { useState } from "react";
 
 export default function MainPage() {
   const [open, setOpen] = useState(false);
