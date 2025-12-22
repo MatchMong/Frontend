@@ -1,17 +1,18 @@
 'use client';
-import { CIRCLE, INPUT, BUTTON } from "../../components";
+import { CIRCLE, INPUT, BUTTON, SELECT } from "../../components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export const SignUp3 = () => {
+export const SignUp3 = ({ password, click }) => {
     const [eyes1, setEyes1] = useState("/icon/offeyes.svg");
     const [eyes2, setEyes2] = useState("/icon/offeyes.svg");
     const [passwordVisible1, setPasswordVisible1] = useState(false);
     const [passwordVisible2, setPasswordVisible2] = useState(false);
-    const [id, setId] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
+    const [num, setNum] = useState("");
     const [password2Touched, setPassword2Touched] = useState(false);
+    const year = new Date().getFullYear();
     
     const router = useRouter();
     
@@ -23,14 +24,23 @@ export const SignUp3 = () => {
         else router.push("/");
     };
     
-    const handleIdChange = (e) => {
-        setId(e.target.value);
-    }
     const handlePasswordChange1 = (e) => {
         setPassword1(e.target.value);
     }
     const handlePasswordChange2 = (e) => {
         setPassword2(e.target.value);
+    }
+    const handleNumChange = (e) => {
+        if(e.target.value <= (year-2016)) {
+            const valueN = e.target.value;
+            const rpN= valueN.replace(/[^0-9]/g, "");
+            setNum(rpN);
+        }
+    }
+    const handleClick = () => {
+        password(password1);
+        gisu(num);
+        click(true);
     }
 
     const showPassword1 = () => {
@@ -55,8 +65,8 @@ export const SignUp3 = () => {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-linear-to-br from-[#DCE2FF] to-[#F4F9FF]">
-            <div className="w-[524px] h-auto bg-white rounded-xl p-3.5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]">
+        <div className="flex flex-col items-center justify-center h-full bg-linear-to-br from-[#DCE2FF] to-[#F4F9FF]">
+            <div className="w-[524px] h-auto bg-white rounded-[36px] p-3.5 m-25 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]">
                 <img src="/icon/leftArrow.svg" alt="Arrow" width={42} onClick={handleBack}/>
                 <div className="w-full flex items-center justify-center">
                     <img src="/icon/M&M.svg" alt="M&M" width={210} />
@@ -78,12 +88,6 @@ export const SignUp3 = () => {
                         child={"3"}
                     />
                 </div>
-                <INPUT
-                    label="아이디"
-                    type="text"
-                    placeholder="아이디를 입력해주세요"
-                    onChange={handleIdChange}
-                />
                 <INPUT 
                     label="비밀번호"
                     type={passwordVisible1 ? "text" : "password"}
@@ -111,7 +115,8 @@ export const SignUp3 = () => {
                 />
                 <BUTTON
                     label="회원가입 완료"
-                    activate={id && passwordsMatch}
+                    activate={passwordsMatch && num}
+                    onClick={() => handleClick()}
                 />
                 <p className="text-center text-[#777C89] font-medium">이미 계정이 있으신가요? <a onClick={() => router.push("/login")} className="text-[#3290FF] underline cursor-pointer font-medium">로그인</a></p>
             </div>

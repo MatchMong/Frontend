@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FetchPost } from "../../API/Fetch";
 
-export const SignUp1 = ({ success, selectedEmail }) => {
+export const SignUp1 = ({ click, success, selectedEmail }) => {
     const [email, setEmail] = useState("");
-    const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    const isValidEmail = (value) => /^[^\s@]+@gsm\.hs\.kr$/.test(value);
     const router = useRouter();
 
     const handleBack = () => {
@@ -21,11 +21,12 @@ export const SignUp1 = ({ success, selectedEmail }) => {
     const clickButton = async () => {
         selectedEmail(email);
         try {
-            await FetchPost("/sign-up", {
+            await FetchPost("/signup/send-code", {
                 email
             });
             success(true);
-        }catch{
+        }catch (error) {
+            console.log("회원가입 실패: " + error);
             success(false);
         }
     }
@@ -34,7 +35,7 @@ export const SignUp1 = ({ success, selectedEmail }) => {
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-linear-to-br from-[#DCE2FF] to-[#F4F9FF]">
-            <div className="w-[524px] h-auto bg-white rounded-xl p-3.5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]">
+            <div className="w-[524px] h-auto bg-white rounded-[36px] p-3.5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]">
                 <img src="/icon/leftArrow.svg" alt="Arrow" width={42} onClick={handleBack}/>
                 <div className="w-full flex items-center justify-center">
                     <img src="/icon/M&M.svg" alt="M&M" width={210} />

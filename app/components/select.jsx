@@ -1,8 +1,8 @@
-export const SELECT = ({ label, placeholder, selectedValue, onClick }) => {
+export const SELECT = ({ label, placeholder, selectedValue, onClick, textColor="#777B86" }) => {
 
     return (
         <div className="relative w-[calc(100%-48px)] m-6">
-            {label && <label className="text-[#777B86] font-pretendard ml-3 mb-2">{label}</label>}
+            {label && <label className={`text-[${textColor}] font-pretendard ml-3 mb-2`}>{label}</label>}
             <div className="absolute w-full h-15 z-10 rounded-xl"
                 onClick={onClick}
             />

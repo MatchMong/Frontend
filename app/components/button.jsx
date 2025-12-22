@@ -8,7 +8,7 @@ export const BUTTON = ({label, activate, ...buttonProps}) => {
                 </button>
             )}
             {!activate && (
-                <button className="w-full h-[62px] bg-[#DCDCDD] rounded-[10px] text-white text-xl" {...buttonProps}>
+                <button className="w-full h-[62px] bg-[#DCDCDD] rounded-[10px] text-white text-xl">
                     {label}
                 </button>
             )}

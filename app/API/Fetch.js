@@ -1,27 +1,25 @@
 export const FetchPost = async (path, data) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     try {
-        const header = {
+        const res = await fetch(`${API_URL}${path}`, {
+          method: "POST",
+          headers: {
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
-        };
-        const response = await fetch(
-            `${API_URL}${path}`,
-            {
-                method: "POST",
-                headers: header,
-                body: data ? JSON.stringify(data) : null,
-                cache: "no-store",
-            }
-        );
-        if (!response.ok) {
-            throw new Error("Failed to fetch plans.");
-        }
-        const result = await response.json();
-        return result;
+          },
+          body: data === null || data === undefined ? undefined : JSON.stringify(data),
+          cache: "no-store",
+        }); 
+
+        const ct = res.headers.get("content-type") || "";
+        const payload = ct.includes("application/json") ? await res.json() : await res.text();
+
+        if (!res.ok) throw new Error(typeof payload === "string" ? payload : JSON.stringify(payload));
+        return payload;
     }
     catch (error) {
         console.log(error);
+        console.log("POST URL =", `${API_URL}${path}`);
         throw error;
     }
 }
@@ -31,6 +29,7 @@ export const FetchGet = async (path) => {
   try {
     const header = {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true"
     };
 
     const response = await fetch(`${API_URL}${path}`, {

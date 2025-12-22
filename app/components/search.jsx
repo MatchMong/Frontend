@@ -73,7 +73,7 @@ export const SEARCH = ({
       {!error && (
       <div className="relative">
         <input
-          className={`w-full bg-white box-border h-12 rounded-xl py-5 ${iconPadding} text-[#777C89] placeholder:text-[#777C89] shadow-[0_4px_4px_1px_rgba(0,0,0,0.08)]`}
+          className={`w-full bg-white box-border h-14 rounded-xl py-5 ${iconPadding} text-[#777C89] placeholder:text-[#777C89] shadow-[0_4px_4px_1px_rgba(0,0,0,0.08)]`}
           maxLength={maxlength}
           {...inputProps}
         />

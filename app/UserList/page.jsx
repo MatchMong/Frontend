@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FetchGet, FetchPost } from "../API/Fetch";
 
 export default function UserList() {
-    const [data, setData] = useState(["1,2"]);
+    const [data, setData] = useState([""]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,7 +19,7 @@ export default function UserList() {
     }, []);
 
     const sendDm = async(userId) => {
-        await FetchPost(`/send-dm?userId=${encodeURIComponent(userId)}`, null);
+        await FetchPost("/send-dm", { userId: String(userId) });
     }
 
     return (

@@ -34,7 +34,7 @@ export const SignUp2 = ({ success, email }) => {
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-linear-to-br from-[#DCE2FF] to-[#F4F9FF]">
-            <div className="w-[524px] h-auto bg-white rounded-xl p-3.5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]">
+            <div className="w-[524px] h-auto bg-white rounded-[36px] p-3.5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]">
                 <img src="/icon/leftArrow.svg" alt="Arrow" width={42} onClick={handleBack}/>
                 <div className="w-full flex items-center justify-center">
                     <img src="/icon/M&M.svg" alt="M&M" width={210} />

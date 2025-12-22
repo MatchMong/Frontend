@@ -5,23 +5,24 @@ import { useRouter } from "next/navigation";
 import { FetchPost } from "../API/Fetch";
 
 export default function LoginPage () {
-    const [id, setId] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [eyes, setEyes] = useState("/icon/offeyes.svg");
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [loginError, setLoginError] = useState(false);
     const router = useRouter();
 
+    const isValidEmail = (value) => /^[^\s@]+@gsm\.hs\.kr$/.test(value);
+    const emailValid = isValidEmail(email);
+    
     const handleBack = () => {
         if (window.history.length > 1) router.back();
         else router.push("/");
     };
 
-    const changeId = (e) => {
-        const valueI = e.target.value;
-        const rpI = valueI.replace(/[^a-zA-Z0-9]/g, "");
-        setId(rpI);
-    }
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+    };
     const changePassword = (e) => {
         const valueP = e.target.value;
         const rpP = valueP.replace(/[^a-zA-Z0-9!-)]/g, "");
@@ -30,7 +31,7 @@ export default function LoginPage () {
 
     const handleLogin = async () => {
         await FetchPost("/login", {
-            id,
+            email,
             password,
         });
     }
@@ -48,17 +49,17 @@ export default function LoginPage () {
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-linear-to-br from-[#DCE2FF] to-[#F4F9FF]">
-            <div className="w-[524px] h-[574px] bg-white rounded-xl p-3.5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]">
+            <div className="w-[524px] h-[574px] bg-white rounded-[36px] p-3.5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]">
                 <img src="/icon/leftArrow.svg" alt="Arrow" width={42} onClick={handleBack}/>
                 <div className="w-full flex items-center justify-center">
                     <img src="/icon/M&M.svg" alt="M&M" width={210} />
                 </div>
                 <INPUT 
-                    label="아이디"
+                    label="이메일"
                     type="text"
-                    placeholder="아이디를 입력해주세요"
-                    value={id}
-                    onChange={(e) => changeId(e)}
+                    placeholder="이메일를 입력해주세요"
+                    value={email}
+                    onChange={(e) => handleEmailChange(e)}
                 />
                 <INPUT 
                     label="비밀번호"
@@ -75,7 +76,7 @@ export default function LoginPage () {
                 />
                 <BUTTON
                     label="로그인"
-                    activate={true}
+                    activate={emailValid}
                     onClick={handleLogin}
                 />
                 <p className="text-center text-[#777C89]">M&M가 처음이신가요? <a onClick={() => router.push("/signUp")} className="text-[#3290FF] underline cursor-pointer">회원가입</a></p>

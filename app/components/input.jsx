@@ -23,7 +23,7 @@ export const INPUT = ({
     ? isLeft
       ? "pl-12 pr-4"
       : "pl-4 pr-12"
-    : "px-6";
+    : "px-4";
 
   const iconPositionClass = isLeft ? "left-4" : "right-4";
   const iconSizeStyle = {

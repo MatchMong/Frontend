@@ -5,3 +5,5 @@ export * from "./SimpleCalendar";
 export * from "./search"
 export * from "./post"
 export * from "./select"
+export * from "./mainHeader"
+export * from "./aside"
