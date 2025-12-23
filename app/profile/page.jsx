@@ -10,6 +10,7 @@ import ActivityStats from "../components/profile/ActivityStats";
 import ProfileImage from "../components/profile/ProfileImage";
 import ProfileBasicInfo from "../components/profile/ProfileBasicInfo";
 import ProfilePersonalInfo from "../components/profile/ProfilePersonalInfo";
+import { MainHeader } from "../components"
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
@@ -64,9 +65,8 @@ const ProfilePage = () => {
   if (!editProfile) return null;
 
   return (
-    <div>
-      <ProfileHeader />
-
+    <div className="bg-[#EAEDFF]">
+      <MainHeader />
       <div>
         <div className="mx-30 mt-10">
           <h1 className="text-4xl font-bold">프로필</h1>
