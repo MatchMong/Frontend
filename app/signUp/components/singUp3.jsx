@@ -3,14 +3,14 @@ import { CIRCLE, INPUT, BUTTON, SELECT } from "../../components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export const SignUp3 = ({ password, click }) => {
+export const SignUp3 = ({ password, click, discordId }) => {
     const [eyes1, setEyes1] = useState("/icon/offeyes.svg");
     const [eyes2, setEyes2] = useState("/icon/offeyes.svg");
     const [passwordVisible1, setPasswordVisible1] = useState(false);
     const [passwordVisible2, setPasswordVisible2] = useState(false);
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
-    const [num, setNum] = useState("");
+    const [dId, setDId] = useState("");
     const [password2Touched, setPassword2Touched] = useState(false);
     const year = new Date().getFullYear();
     
@@ -30,17 +30,13 @@ export const SignUp3 = ({ password, click }) => {
     const handlePasswordChange2 = (e) => {
         setPassword2(e.target.value);
     }
-    const handleNumChange = (e) => {
-        if(e.target.value <= (year-2016)) {
-            const valueN = e.target.value;
-            const rpN= valueN.replace(/[^0-9]/g, "");
-            setNum(rpN);
-        }
+    const handleDiscordIdChange = (e) => {
+        setDId(e.target.value);
     }
     const handleClick = () => {
         password(password1);
-        gisu(num);
         click(true);
+        discordId(dId);
     }
 
     const showPassword1 = () => {
@@ -113,9 +109,14 @@ export const SignUp3 = ({ password, click }) => {
                     onBlur={() => setPassword2Touched(true)}
                     value={password2}
                 />
+                <INPUT 
+                    label="디스코드 아이디"
+                    placeholder="디스코드 아이디를 입력해주세요"
+                    onChange={handleDiscordIdChange}
+                />
                 <BUTTON
                     label="회원가입 완료"
-                    activate={passwordsMatch && num}
+                    activate={passwordsMatch}
                     onClick={() => handleClick()}
                 />
                 <p className="text-center text-[#777C89] font-medium">이미 계정이 있으신가요? <a onClick={() => router.push("/login")} className="text-[#3290FF] underline cursor-pointer font-medium">로그인</a></p>

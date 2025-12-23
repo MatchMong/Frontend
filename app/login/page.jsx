@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { INPUT, BUTTON } from "../components/";
 import { useRouter } from "next/navigation";
 import { FetchPost } from "../API/Fetch";
@@ -9,11 +9,31 @@ export default function LoginPage () {
     const [password, setPassword] = useState("");
     const [eyes, setEyes] = useState("/icon/offeyes.svg");
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [click, setClick] = useState(false);
     const [loginError, setLoginError] = useState(false);
     const router = useRouter();
 
     const isValidEmail = (value) => /^[^\s@]+@gsm\.hs\.kr$/.test(value);
     const emailValid = isValidEmail(email);
+
+    useEffect(() => {
+        if(click == false) return;
+        const handleLogin = async () => {
+            try {
+                await FetchPost("/login", {
+                    email,
+                    password,
+                });
+                router.push("/main");
+            } catch (error) {
+                console.log("로그인 실패: " + error);
+                setLoginError(true);
+                setClick(false);
+            }
+        }
+
+        handleLogin();
+    }, [click])
     
     const handleBack = () => {
         if (window.history.length > 1) router.back();
@@ -27,13 +47,6 @@ export default function LoginPage () {
         const valueP = e.target.value;
         const rpP = valueP.replace(/[^a-zA-Z0-9!-)]/g, "");
         setPassword(rpP);
-    }
-
-    const handleLogin = async () => {
-        await FetchPost("/login", {
-            email,
-            password,
-        });
     }
 
     const showPassword = () => {
@@ -69,7 +82,7 @@ export default function LoginPage () {
                     iconAsButton={true}
                     onIconClick={showPassword}
                     error={loginError}
-                    errorMessage={"비밀번호가 틀렸습니다."}
+                    errorMessage={"이메일 또는 비밀번호가 틀렸습니다."}
                     placeholder="비밀번호를 입력해주세요"
                     value={password}
                     onChange={(e) => changePassword(e)}
@@ -77,7 +90,7 @@ export default function LoginPage () {
                 <BUTTON
                     label="로그인"
                     activate={emailValid}
-                    onClick={handleLogin}
+                    onClick={() => setClick(true)}
                 />
                 <p className="text-center text-[#777C89]">M&M가 처음이신가요? <a onClick={() => router.push("/signUp")} className="text-[#3290FF] underline cursor-pointer">회원가입</a></p>
                 <p className="text-center text-[#777C89]"><a onClick={() => router.push("/findPassword")} className="cursor-pointer">비밀번호 찾기</a></p>
