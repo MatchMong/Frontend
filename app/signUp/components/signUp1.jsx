@@ -2,7 +2,7 @@
 import { CIRCLE, INPUT, BUTTON } from "../../components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FetchPost } from "../../API/Fetch";
+import { FetchPost } from "../../hook/Fetch";
 
 export const SignUp1 = ({ click, success, selectedEmail }) => {
     const [email, setEmail] = useState("");
@@ -20,11 +20,11 @@ export const SignUp1 = ({ click, success, selectedEmail }) => {
 
     const clickButton = async () => {
         selectedEmail(email);
+        success(true);
         try {
             await FetchPost("/signup/send-code", {
                 email
             });
-            success(true);
         }catch (error) {
             console.log("회원가입 실패: " + error);
             success(false);

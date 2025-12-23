@@ -3,7 +3,7 @@ import { SEARCH, SimpleCalendar, POST, MainHeader, ASIDE } from "@/app/component
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
 import { CreateRoom, UserList, UserCard } from "./Modal/";
 import { useRouter } from "next/navigation";
-import { FetchGet } from "../API/Fetch";
+import { FetchGet } from "../hook/Fetch";
 
 export default function HomePage() {
     const gridRef = useRef(null);

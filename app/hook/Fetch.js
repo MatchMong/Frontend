@@ -19,7 +19,6 @@ export const FetchPost = async (path, data) => {
     }
     catch (error) {
         console.log(error);
-        console.log("POST URL =", `${API_URL}${path}`);
         throw error;
     }
 }
