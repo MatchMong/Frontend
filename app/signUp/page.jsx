@@ -1,7 +1,7 @@
 'use client';
 import { SignUp1, SignUp2, SignUp3, Agree } from "./components";
 import { useEffect, useState } from "react";
-import { FetchPost } from "../API/Fetch";
+import { FetchPost } from "../hook/Fetch";
 import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
