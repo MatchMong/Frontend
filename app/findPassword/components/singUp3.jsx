@@ -3,7 +3,7 @@ import { CIRCLE, INPUT, BUTTON } from "../../components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export const SignUp3 = () => {
+export const SignUp3 = ({ click }) => {
     const [eyes1, setEyes1] = useState("/icon/offeyes.svg");
     const [eyes2, setEyes2] = useState("/icon/offeyes.svg");
     const [passwordVisible1, setPasswordVisible1] = useState(false);
@@ -21,33 +21,10 @@ export const SignUp3 = () => {
         if (window.history.length > 1) router.back();
         else router.push("/");
     };
-    
-    const handlePasswordChange1 = (e) => {
-        setPassword1(e.target.value);
-    }
-    const handlePasswordChange2 = (e) => {
-        setPassword2(e.target.value);
-    }
 
-    const showPassword1 = () => {
-        if (eyes1 === "/icon/offeyes.svg") {
-            setEyes1("/icon/openeyes.svg");
-            setPasswordVisible1(true);
-
-        } else {
-            setEyes1("/icon/offeyes.svg");
-            setPasswordVisible1(false);
-        }
-    }
-    const showPassword2 = () => {
-        if (eyes2 === "/icon/offeyes.svg") {
-            setEyes2("/icon/openeyes.svg");
-            setPasswordVisible2(true);
-
-        } else {
-            setEyes2("/icon/offeyes.svg");
-            setPasswordVisible2(false);
-        }
+    const handleClick = () => {
+        router.push("/login");
+        click(true);
     }
 
     return (
@@ -74,34 +51,14 @@ export const SignUp3 = () => {
                         child={"3"}
                     />
                 </div>
-                <INPUT 
-                    label="새 비밀번호"
-                    type={passwordVisible1 ? "text" : "password"}
-                    iconSrc={eyes1}
-                    iconSize={28}
-                    iconAsButton={true}
-                    onIconClick={showPassword1}
-                    placeholder="비밀번호를 입력해주세요"
-                    onChange={handlePasswordChange1}
-                />
-                <INPUT 
-                    label="새 비밀번호 확인"
-                    type={passwordVisible2 ? "text" : "password"}
-                    iconSrc={eyes2}
-                    iconSize={28}
-                    iconAsButton={true}
-                    onIconClick={showPassword2}
-                    error={showError}
-                    errorMessage={"비밀번호가 틀렸습니다."}
-                    placeholder="비밀번호를 입력해주세요"
-                    onChange={handlePasswordChange2}
-                    onFocus={() => setPassword2Touched(false)}
-                    onBlur={() => setPassword2Touched(true)}
-                    value={password2}
-                />
+                <div className="flex flex-col bg-[#D9D9D9] rounded-xl p-5 mx-6 text-center mt-6 text-3xl font-bold">
+                    <p>이메일로 임시 비밀번호가</p>
+                    <p>전송되었습니다.</p>
+                </div>
                 <BUTTON
-                    label="비밀번호 변경 완료"
-                    activate={passwordsMatch}
+                    label="로그인 페이지로 이동"
+                    activate={true}
+                    onClick={() => handleClick()}
                 />
             </div>
         </div>

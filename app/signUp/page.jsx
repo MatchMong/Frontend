@@ -1,12 +1,12 @@
 'use client';
 import { SignUp1, SignUp2, SignUp3, Agree } from "./components";
 import { useEffect, useState } from "react";
-import { FetchPost } from "../hook/Fetch";
+import { FetchPost } from "../API/Fetch";
 import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
     const [selectedEmail, setSelectedEmail] = useState("");
-    const [agree, setAgree] = useState(true);
+    const [agree, setAgree] = useState(false);
     const [success1, setSuccess1] = useState(false);
     const [success2, setSuccess2] = useState(false);
     const next2 = success1;
@@ -51,6 +51,7 @@ export default function SignUpPage() {
                         <SignUp2
                             num={setCode}
                             success={setSuccess2}
+                            email={selectedEmail}
                         />
                     ) : (
                         <SignUp3 

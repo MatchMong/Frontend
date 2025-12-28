@@ -1,9 +1,22 @@
 import { SEARCH, SimpleCalendar } from "./index"
 import { UserCard } from "../main/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const ASIDE = ({ roomModal }) => {
     const [userList, setUserList] = useState(false);
+
+    useEffect(() => {
+        const UserList = async () => {
+            try {
+                const res = await FetchGetAuth(`/api/users/profiles`, null);
+                setUserList(res);
+            } catch(error) {
+                console.log("유저 목록 불러오기 실패: " + error)
+            }
+        };
+
+        UserList();
+    }, [])
 
     const handleRoomClick = (() => {
         roomModal((prev) => !prev);
@@ -42,38 +55,17 @@ export const ASIDE = ({ roomModal }) => {
                     <>
                         <div onClick={handleUserListClick} className="fixed inset-0 z-40">
                             <div onClick={(e) => e.stopPropagation()} className="w-70 h-80 flex flex-col absolute top-90 left-15 z-41 px-5 py-8 gap-y-4 overflow-y-auto bg-white rounded-b-xl shadow-[0_4px_4px_1px_rgba(0,0,0,0.08)]">
-                                <UserCard
-                                    bg="white"
-                                    iconSize={36}
-                                    profileText={14}
-                                    specialtyText={10}
-                                    ml={8}
-                                    onlyUser={true}
-                                />
-                                <UserCard
-                                    bg="white"
-                                    iconSize={36}
-                                    profileText={14}
-                                    specialtyText={10}
-                                    ml={8}
-                                    onlyUser={true}
-                                />
-                                <UserCard
-                                    bg="white"
-                                    iconSize={36}
-                                    profileText={14}
-                                    specialtyText={10}
-                                    ml={8}
-                                    onlyUser={true}
-                                />
-                                <UserCard
-                                    bg="white"
-                                    iconSize={36}
-                                    profileText={14}
-                                    specialtyText={10}
-                                    ml={8}
-                                    onlyUser={true}
-                                />
+                                {userList?.map((r) => (
+                                    <UserCard
+                                        user={r}
+                                        bg="white"
+                                        iconSize={36}
+                                        profileText={14}
+                                        specialtyText={10}
+                                        ml={8}
+                                        onlyUser={true}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </>

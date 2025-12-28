@@ -3,7 +3,7 @@ import { SEARCH, SimpleCalendar, POST, MainHeader, ASIDE } from "@/app/component
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
 import { CreateRoom, UserList, UserCard } from "./Modal/";
 import { useRouter } from "next/navigation";
-import { FetchGet } from "../hook/Fetch";
+import { FetchGetAuth, FetchPostAuth } from "../API/Fetch";
 
 export default function HomePage() {
     const gridRef = useRef(null);
@@ -12,6 +12,16 @@ export default function HomePage() {
     const [userModal, setUserModal] = useState(false);
     const [roomModal, setRoomModal] = useState(false);
     const [base, setBase] = useState(null);
+    const [room, setRoom] = useState([]);
+    const [selectedRoomId, setSelectedRoomId] = useState(null);
+    const [selectedRoomTitle, setSelectedRoomTitle] = useState(null);
+
+    const router = useRouter();
+
+    useEffect(() => {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) router.replace("/login");
+    }, [router]);
 
     const getGridHeight = () => {
         const el = gridRef.current;
@@ -19,18 +29,27 @@ export default function HomePage() {
         return Math.ceil(el.getBoundingClientRect().height);
     };
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const res = await FetchGet('/main');
-    //                 setPost(res);
-    //         } catch(error) {
-    //             console.log("게시물 목록 불러오기 실패: " + error)
-    //         }
-    //     };
+    useEffect(() => {
+        const Room = async() => {
+            try {
+                const res = await FetchGetAuth("/api/rooms", null);
+                setRoom(res);
+            } catch (error) {
+                console.log("방 불러오기 실패: " + error)
+            }
+        }
 
-    //     fetchData();
-    // }, [])
+        Room();
+    }, []);
+
+    const handleJoin = async(rid) => {
+        try {
+            const res = await FetchPostAuth(`/api/rooms/${rid}/join`, null);
+            setRoom(res);
+        } catch (error) {
+            console.log("방 참가 요청 실패: " + error)
+        }
+    }
 
     useLayoutEffect(() => {
         if (!base) return;
@@ -40,12 +59,19 @@ export default function HomePage() {
         setBase({ w: window.innerWidth, h: window.innerHeight });
     }, []);
 
-    const handleUserClick = (() => {
-        setUserModal((prev) => !prev);
-    })
+    const handleUserClick = (rid, rti) => {
+        setSelectedRoomId(rid);
+        setSelectedRoomTitle(rti);
+        setUserModal(true);
+    };
+
+    const closeUserModal = () => {
+        setUserModal(false);
+        setSelectedRoomId(null);
+    };
     const handleRoomClick = (() => {
         setRoomModal((prev) => !prev);
-    })
+    });
 
     if (!base) return null;
 
@@ -60,49 +86,34 @@ export default function HomePage() {
                             roomModal={handleRoomClick}
                         />
                         <div ref={gridRef} className="w-full ml-15 grid grid-cols-2 gap-x-12 gap-y-13 overflow-y-auto pr-2" style={{ gridAutoRows: `${(gridHeight-52)/2}px` }}>
-                            <POST
-                                title={"제목"}
-                                label={"설명"}
-                                onUserClick={handleUserClick}
-                            />
-                            <POST
-                                title={"제목"}
-                                label={"설명"}
-                                onUserClick={handleUserClick}
-                            />
-                            <POST 
-                                title={"제목"}
-                                label={"설명"}
-                                onUserClick={handleUserClick}
-                            />
-                            <POST 
-                                title={"제목"}
-                                label={"설명"}
-                                onUserClick={handleUserClick}
-                            />
-                            <POST 
-                                title={"제목"}
-                                label={"설명"}
-                                onUserClick={handleUserClick}
-                            />
-                            <POST 
-                                title={"제목"}
-                                label={"설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"}
-                                onUserClick={handleUserClick}
-                            />
+                            {room?.map((r) => (
+                                <POST
+                                    key={r.roomId}
+                                    title={r.roomtitle}
+                                    label={r.roomwrite}
+                                    user={r.maxParticipants ?? 0}
+                                    roomId={r.roomId}
+                                    ownerId={r.ownerId}
+                                    onClick={() => handleJoin(r.roomId)}
+                                    onUserClick={() => handleUserClick(r.roomId, r.roomtitle)}
+                                />
+                            ))}
                         </div>
                     </div>
                     <div className="w-full h-22"></div>
 
                     {userModal && (
                         <UserList
-                            closeClick={handleUserClick}
+                            roomId={selectedRoomId}
+                            roomTitle={selectedRoomTitle}
+                            closeClick={closeUserModal}
                         />
                     )}
 
                     {roomModal && (
                         <CreateRoom
                             closeClick={handleRoomClick}
+                            success={handleRoomClick}
                         />
                     )}
                 </div>

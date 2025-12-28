@@ -2,38 +2,39 @@
 import { useState, useEffect } from "react";
 import { INPUT, BUTTON } from "../components/";
 import { useRouter } from "next/navigation";
-import { FetchPost } from "../hook/Fetch";
+import { FetchPost } from "../API/Fetch";
 
 export default function LoginPage () {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [eyes, setEyes] = useState("/icon/offeyes.svg");
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const [click, setClick] = useState(false);
     const [loginError, setLoginError] = useState(false);
     const router = useRouter();
 
     const isValidEmail = (value) => /^[^\s@]+@gsm\.hs\.kr$/.test(value);
     const emailValid = isValidEmail(email);
 
-    useEffect(() => {
-        if(click == false) return;
-        const handleLogin = async () => {
-            try {
-                await FetchPost("/login", {
-                    email,
-                    password,
-                });
-                router.push("/main");
-            } catch (error) {
-                console.log("로그인 실패: " + error);
-                setLoginError(true);
-                setClick(false);
-            }
-        }
+    const handleLogin = async () => {
+        setLoginError(false);
 
-        handleLogin();
-    }, [click])
+        try {
+        const res = await FetchPost("/login", { email, password });
+
+        const accessToken = res?.accessToken ?? res?.data?.accessToken;
+        const refreshToken = res?.refreshToken ?? res?.data?.refreshToken;
+
+        if (!accessToken || !refreshToken) throw new Error("토큰이 응답에 없음");
+
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        router.push("/main");
+        } catch (error) {
+        console.log("로그인 실패: " + error);
+        setLoginError(true);
+        }
+    };
     
     const handleBack = () => {
         if (window.history.length > 1) router.back();
@@ -90,7 +91,7 @@ export default function LoginPage () {
                 <BUTTON
                     label="로그인"
                     activate={emailValid}
-                    onClick={() => setClick(true)}
+                    onClick={handleLogin}
                 />
                 <p className="text-center text-[#777C89]">M&M가 처음이신가요? <a onClick={() => router.push("/signUp")} className="text-[#3290FF] underline cursor-pointer">회원가입</a></p>
                 <p className="text-center text-[#777C89]"><a onClick={() => router.push("/findPassword")} className="cursor-pointer">비밀번호 찾기</a></p>
