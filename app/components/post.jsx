@@ -1,5 +1,5 @@
 // import { useState, useEffect } from "react";
-// import { FetchGetAuth } from "../API/Fetch";
+// import { FetchGetAuth } from "../jook/Fetch";
 
 // export const POST = ({title, label, user, onUserClick, roomId, ownerId, ...postProps}) => {
 //     const [userList, setUserList] = useState([]);
@@ -53,7 +53,7 @@
 //     )
 // }
 import { useState, useEffect } from "react";
-import { FetchGetAuth } from "../API/Fetch";
+import { FetchGetAuth } from "../hook/Fetch";
 
 export const POST = ({ title, label, user, onUserClick, roomId, ownerId, onClick, ...postProps }) => {
   const [userList, setUserList] = useState([]);

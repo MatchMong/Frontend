@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { INPUT, BUTTON } from "../components/";
 import { useRouter } from "next/navigation";
-import { FetchPost } from "../API/Fetch";
+import { FetchPost } from "../hook/Fetch";
 
 export default function LoginPage () {
     const [email, setEmail] = useState("");

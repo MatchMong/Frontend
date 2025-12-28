@@ -1,6 +1,6 @@
 import { INPUT } from "../../components"
 import { useState } from "react"
-import { FetchPostAuth } from "../../API/Fetch"
+import { FetchPostAuth } from "../../hook/Fetch"
 
 export const CreateRoom = ({
     closeClick,

@@ -2,7 +2,7 @@
 import { CIRCLE, INPUT, BUTTON } from "../../components";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FetchPost } from "../../API/Fetch";
+import { FetchPost } from "../../hook/Fetch";
 
 export const SignUp1 = ({ click, success, selectedEmail }) => {
     const [email, setEmail] = useState("");

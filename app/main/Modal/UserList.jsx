@@ -39,7 +39,7 @@
 // }
 'use client';
 import { useEffect, useState } from "react";
-import { FetchDeleteAuth, FetchGetAuth } from "../../API/Fetch";
+import { FetchDeleteAuth, FetchGetAuth } from "../../hook/Fetch";
 
 export const UserList = ({ closeClick, roomId, roomTitle }) => {
   const [userList, setUserList] = useState([]);

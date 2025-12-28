@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from "next/navigation"
-import { FetchPostAuth } from "../API/Fetch";
+import { FetchPostAuth } from "../hook/Fetch";
 export const MainHeader = () => {
     const router = useRouter();
 

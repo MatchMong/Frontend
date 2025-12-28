@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
-import { FetchGet, FetchPost } from "../API/Fetch";
+import { FetchGet, FetchPost } from "../hook/Fetch";
 
 export default function UserList() {
     const [data, setData] = useState([""]);
