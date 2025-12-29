@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { INPUT, BUTTON } from "../components/";
 import { useRouter } from "next/navigation";
 import { FetchPost } from "../API/Fetch";
@@ -14,6 +14,27 @@ export default function LoginPage () {
 
     const isValidEmail = (value) => /^[^\s@]+@gsm\.hs\.kr$/.test(value);
     const emailValid = isValidEmail(email);
+
+    const handleLogin = async () => {
+        setLoginError(false);
+
+        try {
+        const res = await FetchPost("/login", { email, password });
+
+        const accessToken = res?.accessToken ?? res?.data?.accessToken;
+        const refreshToken = res?.refreshToken ?? res?.data?.refreshToken;
+
+        if (!accessToken || !refreshToken) throw new Error("토큰이 응답에 없음");
+
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        router.push("/main");
+        } catch (error) {
+        console.log("로그인 실패: " + error);
+        setLoginError(true);
+        }
+    };
     
     const handleBack = () => {
         if (window.history.length > 1) router.back();
@@ -27,13 +48,6 @@ export default function LoginPage () {
         const valueP = e.target.value;
         const rpP = valueP.replace(/[^a-zA-Z0-9!-)]/g, "");
         setPassword(rpP);
-    }
-
-    const handleLogin = async () => {
-        await FetchPost("/login", {
-            email,
-            password,
-        });
     }
 
     const showPassword = () => {
@@ -69,7 +83,7 @@ export default function LoginPage () {
                     iconAsButton={true}
                     onIconClick={showPassword}
                     error={loginError}
-                    errorMessage={"비밀번호가 틀렸습니다."}
+                    errorMessage={"이메일 또는 비밀번호가 틀렸습니다."}
                     placeholder="비밀번호를 입력해주세요"
                     value={password}
                     onChange={(e) => changePassword(e)}

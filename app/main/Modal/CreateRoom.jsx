@@ -1,16 +1,43 @@
-import { INPUT, SELECT } from "../../components"
-import { UserCard } from "./UserList"
+import { INPUT } from "../../components"
 import { useState } from "react"
+import { FetchPostAuth } from "../../API/Fetch"
 
 export const CreateRoom = ({
     closeClick,
-    selectValue,
+    success,
 }) => {
-    const [userList, setUserList] = useState(false)
+    const [roomtitle, setRoomtitle] = useState("");
+    const [roomcount, setRoomcount] = useState("");
+    const [roomwrite, setRoomwrite] = useState("");
 
-    const handleUserListClick = (() => {
-        setUserList((prev) => !prev);
-    })
+    const MAX_DESC = 50;
+
+    const onRoomCountChange = (e) => {
+        const onlyDigits = e.target.value.replace(/\D/g, "");
+        setRoomcount(onlyDigits);
+    };
+
+    const onRoomWriteChange = (e) => {
+        setRoomwrite(e.target.value.slice(0, MAX_DESC));
+    };
+
+    const handleCreateRoom = async () => {
+    try {
+        const parsed = Number(roomcount);
+        const maxParticipants =
+        roomcount == null || roomcount === "" || !Number.isFinite(parsed) || parsed === 0
+            ? 999
+            : parsed;
+        await FetchPostAuth("/api/rooms", {
+            roomtitle,
+            maxParticipants,
+            roomwrite,
+        });
+            success(true);
+        } catch (error) {
+            console.log("방 생성 실패: " + error);
+        }
+    };
 
     return (
         <div>
@@ -22,57 +49,36 @@ export const CreateRoom = ({
                     <INPUT
                         label={"팀 이름"}
                         labelColor={"777B86"}
+                        value={roomtitle}
+                        onChange={(e) => setRoomtitle(e.target.value)}
+                    />
+                    <INPUT
+                        label={"팀 최대 인원 수"}
+                        labelColor={"777B86"}
+                        value={roomcount}
+                        inputMode="numeric"
+                        onChange={onRoomCountChange}
                     />
                     <INPUT
                         label={"팀 설명"}
                         labelColor={"777B86"}
+                        value={roomwrite}
+                        maxlength={50}
+                        rightInnerText={`${roomwrite.length}/50`}
+                        onChange={onRoomWriteChange}
                     />
-                    <SELECT
-                        label={"팀 인원 선택"}
-                        placeholder={"유저 목록"}
-                        selectedValue={selectValue || ""}
-                        onClick={handleUserListClick}
-                    />
-                    {userList && (
-                        <div className="w-[336px] h-63 flex flex-col absolute bottom-[-112] right-13 border border-[#D9D9D9] border-t-0 z-10 px-5 py-8 gap-y-4 overflow-y-auto scrollbar-hide bg-white rounded-b-xl">
-                            <UserCard
-                                bg="white"
-                                iconSize={36}
-                                profileText={14}
-                                specialtyText={10}
-                                ml={8}
-                                onlyUser={true}
-                            />
-                            <UserCard
-                                bg="white"
-                                iconSize={36}
-                                profileText={14}
-                                specialtyText={10}
-                                ml={8}
-                                onlyUser={true}
-                            />
-                            <UserCard
-                                bg="white"
-                                iconSize={36}
-                                profileText={14}
-                                specialtyText={10}
-                                ml={8}
-                                onlyUser={true}
-                            />
-                            <UserCard
-                                bg="white"
-                                iconSize={36}
-                                profileText={14}
-                                specialtyText={10}
-                                ml={8}
-                                onlyUser={true}
-                            />
-                        </div>
-                    )}
                     <div className="w-[calc(100%-48px)] m-6 text-white text-xl font-medium font-pretendard">
-                        <button className="w-full h-15 bg-[#5570FF] rounded-xl">
-                            생성하기
-                        </button>
+                        {roomtitle.trim() && roomwrite.trim() ? (
+                            <button className="w-full h-15 bg-[#5570FF] rounded-xl"
+                                onClick={handleCreateRoom}
+                            >
+                                생성하기
+                            </button>
+                        ) : (
+                            <button className="w-full h-15 rounded-xl bg-[#DCDCDD] text-white text-xl">
+                                생성하기
+                            </button>
+                        )}
                     </div>
                     
                 </div>

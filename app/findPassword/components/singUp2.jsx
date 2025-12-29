@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FetchPost } from "../../API/Fetch";
 
-export const SignUp2 = ({ success, email }) => {
+export const SignUp2 = ({ success, selectedEmail }) => {
     const [code, setCode] = useState("");
     const router = useRouter();
 
@@ -19,22 +19,26 @@ export const SignUp2 = ({ success, email }) => {
         setCode(rpC);
     }
 
-    const verifyCode = async () => {
+    const handleSignUp = async () => {
         try {
-            await FetchPost("/sign-up", {
-                code
-            })
-            success(true)
-        } catch {
-            success(false)
+            await FetchPost("/find-password/verify", {
+                email: selectedEmail,
+                verificationCode: code,
+            });
+            success(true);
+            
+        } catch (error) {
+            console.log("비밀번호 찾기 실패: " + error);
+            success(false);
         }
-    }
+    };
+
 
     const codeValid = code.length === 6;
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-linear-to-br from-[#DCE2FF] to-[#F4F9FF]">
-            <div className="w-[524px] h-auto bg-white rounded-xl p-3.5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]">
+            <div className="w-[524px] h-auto bg-white rounded-[36px] p-3.5 shadow-[0_0_10px_2px_rgba(0,0,0,0.1)]">
                 <img src="/icon/leftArrow.svg" alt="Arrow" width={42} onClick={handleBack}/>
                 <div className="w-full flex items-center justify-center">
                     <img src="/icon/M&M.svg" alt="M&M" width={210} />
@@ -67,8 +71,9 @@ export const SignUp2 = ({ success, email }) => {
                 <BUTTON
                     label="다음"
                     activate={codeValid}
-                    onClick={verifyCode}
+                    onClick={handleSignUp}
                 />
+                <p className="text-center text-[#777C89] font-medium mb-15">이미 계정이 있으신가요? <a onClick={() => router.push("/login")} className="text-[#3290FF] underline cursor-pointer font-medium">로그인</a></p>
             </div>
         </div>
     )

@@ -20,11 +20,11 @@ export const SignUp1 = ({ click, success, selectedEmail }) => {
 
     const clickButton = async () => {
         selectedEmail(email);
+        success(true);
         try {
             await FetchPost("/signup/send-code", {
-                email
+                email,
             });
-            success(true);
         }catch (error) {
             console.log("회원가입 실패: " + error);
             success(false);
