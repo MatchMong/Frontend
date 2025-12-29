@@ -1,0 +1,1 @@
+turbopack: { root: __dirname }
