@@ -121,17 +121,23 @@ export default function HomePage() {
                             roomModal={handleRoomClick}
                         />
                         <div ref={gridRef} className="w-full ml-15 grid grid-cols-2 gap-x-12 gap-y-13 overflow-y-auto pr-2" style={{ gridAutoRows: `${(gridHeight-52)/2}px` }}>
-                            {[...room].reverse().map((r) => (
+                           {[...room]
+                            .reverse()
+                            .filter((r) => {
+                                const q = search?.trim();
+                                if (!q) return true;
+                                return (r.roomtitle ?? "").toLowerCase().includes(q.toLowerCase());
+                            })
+                            .map((r) => (
                                 <POST
-                                    key={r.roomId}
-                                    title={r.roomtitle}
-                                    label={r.roomwrite}
-                                    user={r.maxParticipants ?? 0}
-                                    roomId={r.roomId}
-                                    ownerId={r.ownerId}
-                                    onClick={() => handleJoin(r.roomId, discordId)}
-                                    onUserClick={() => handleUserClick(r.roomId, r.roomtitle, r.ownerId)}
-                                    // hidden={r.title == search && search!="" ? "hidden" : ""}
+                                key={r.roomId}
+                                title={r.roomtitle}
+                                label={r.roomwrite}
+                                user={r.maxParticipants ?? 0}
+                                roomId={r.roomId}
+                                ownerId={r.ownerId}
+                                onClick={() => handleJoin(r.roomId, discordId)}
+                                onUserClick={() => handleUserClick(r.roomId, r.roomtitle, r.ownerId)}
                                 />
                             ))}
                         </div>

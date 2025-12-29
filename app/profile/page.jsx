@@ -1,10 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-// import { SquarePen } from "lucide-react";
-import ProfileHeader from "../components/profile/ProfileHeader";
 import ProfileContainer from "../components/profile/ProfileContainer";
-// import InputField from "../components/InputField";
 import ActivityStats from "../components/profile/ActivityStats";
 import ProfileImage from "../components/profile/ProfileImage";
 import ProfileBasicInfo from "../components/profile/ProfileBasicInfo";
@@ -18,29 +15,38 @@ const ProfilePage = () => {
   const [isEditing, setEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // 데이터 가져 옴
   useEffect(() => {
-    const Profile1 = async () => {
-        try {
-            const res = await FetchGetAuth(`/api/profile/me`, null);
-            setProfile(res);
-        } catch(error) {
-            console.log("프로필 불러오기 실패: " + error)
-        }
+    const fetchProfile = async () => {
+      try {
+        const res = await FetchGetAuth(`/api/profile/me`);
+
+        const me = Array.isArray(res) ? res[0] : res;
+
+        setProfile(me ?? null);
+        setEditProfile(me ?? null);
+
+        console.log("res:", res);
+        console.log("me:", me);
+      } catch (error) {
+        console.log("프로필 불러오기 실패:", error);
+      }
     };
-    Profile1();
+
+    fetchProfile();
   }, []);
 
-  // 변경
+
+
   const handleChange = (key, value) => {
     setEditProfile((prev) => ({
-      ...prev,
+      ...(prev ?? {}),
       [key]: value,
     }));
   };
 
-  // 저장
   const handleSave = async () => {
+    if (!editProfile) return;
+
     try {
       setIsSaving(true);
       const accessToken = localStorage.getItem("accessToken");
@@ -56,7 +62,13 @@ const ProfilePage = () => {
 
       if (!res.ok) throw new Error(await res.text());
 
+      // 서버가 수정된 프로필을 반환한다면 이걸로 갱신하는게 베스트:
+      // const saved = await res.json();
+      // setProfile(saved);
+      // setEditProfile(saved);
+
       setProfile(editProfile);
+      setEditProfile(editProfile);
       setEditing(false);
       alert("프로필이 수정되었습니다.");
     } catch (e) {
@@ -67,42 +79,34 @@ const ProfilePage = () => {
     }
   };
 
-
-  // 취소
   const handleCancel = () => {
     setEditProfile(profile);
     setEditing(false);
   };
 
-  useEffect(() => {
-    const Profile1 = async () => {
-      try {
-        const res = await FetchGetAuth(`/api/profile/me`, null);
-        setProfile(res);
-        setEditProfile(res);
-      } catch (error) {
-        console.log("프로필 불러오기 실패: " + error);
-      }
-    };
-    Profile1();
-  }, []);
+  if (!editProfile) {
+    return (
+      <div className="bg-[#EAEDFF] min-h-screen">
+        <MainHeader />
+        <div className="mx-30 mt-10">로딩중...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#EAEDFF]">
       <MainHeader />
-      <div>
-        <div className="mx-30 mt-10">
-          <h1 className="text-4xl font-bold">프로필</h1>
-          <p className="mt-4 mb-6">개인 정보를 관리하고 업데이트하세요</p>
-        </div>
+
+      <div className="mx-30 mt-10">
+        <h1 className="text-4xl font-bold">프로필</h1>
+        <p className="mt-4 mb-6">개인 정보를 관리하고 업데이트하세요</p>
       </div>
 
       <div className="flex flex-wrap justify-around">
-        {/* 프로필 */}
         <ProfileContainer className="p-8">
           <ProfileImage
-            profileImg={editProfile}
-            name={editProfile}
+            profileImg={editProfile.profileImg}
+            name={editProfile.nickname}
             setProfileImg={(img) => handleChange("profileImg", img)}
             isEditing={isEditing}
           />
@@ -116,7 +120,6 @@ const ProfilePage = () => {
           />
         </ProfileContainer>
 
-        {/* 개인 정보 */}
         <ProfileContainer className="p-10">
           <ProfilePersonalInfo
             data={editProfile}
@@ -124,14 +127,9 @@ const ProfilePage = () => {
             onChange={handleChange}
             handleSave={handleSave}
             handleCancel={handleCancel}
+            isSaving={isSaving}
           />
         </ProfileContainer>
-
-        {/* 활동 통계 */}
-        <ProfileContainer className="p-10 mb-20">
-          <ActivityStats />
-        </ProfileContainer>
-
       </div>
     </div>
   );

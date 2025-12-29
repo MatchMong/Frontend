@@ -57,7 +57,7 @@ export const ASIDE = ({ userList, roomModal, search }) => {
                                         profileText={14}
                                         specialtyText={10}
                                         ml={8}
-                                        onlyUser={true}
+                                        onlyUser={false}
                                     />
                                 ))}
                             </div>

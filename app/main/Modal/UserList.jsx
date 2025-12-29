@@ -298,7 +298,7 @@ export const UserCard = ({
             <img src="icon/userBg.svg" width={iconSize} />
           </div>
 
-          <div className={`ml-${ml}`}>
+          <div className={`ml-5`}>
             <p className={`text-[${nameText}px] font-medium font-pretendard`}>{user ?? discordId}</p>
             <p className={`text-[#777B86] text-[${specialtyText}px] font-pretendard`}>{major ?? "무전공"}</p>
           </div>
