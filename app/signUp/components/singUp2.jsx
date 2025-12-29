@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FetchPost } from "../../hook/Fetch";
 
-export const SignUp2 = ({ num, success }) => {
+export const SignUp2 = ({ num, success, email }) => {
     const [code, setCode] = useState("");
     const router = useRouter();
 
@@ -22,7 +22,8 @@ export const SignUp2 = ({ num, success }) => {
     const verifyCode = async () => {
         try {
             await FetchPost("/signup/verify-code", {
-                code
+                email,
+                verificationCode: code,
             })
             num(code);
             success(true);

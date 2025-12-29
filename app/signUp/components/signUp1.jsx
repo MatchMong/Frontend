@@ -23,7 +23,7 @@ export const SignUp1 = ({ click, success, selectedEmail }) => {
         success(true);
         try {
             await FetchPost("/signup/send-code", {
-                email
+                email,
             });
         }catch (error) {
             console.log("회원가입 실패: " + error);
