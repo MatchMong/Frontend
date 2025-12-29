@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
-import { FetchGet, FetchPost } from "../hook/Fetch";
+import { FetchGetAuth, FetchPostAuth } from "../hook/Fetch";
 
 export default function UserList() {
     const [data, setData] = useState([""]);
@@ -8,7 +8,7 @@ export default function UserList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await FetchGet('/members');
+                const result = await FetchGetAuth('/members');
                 setData(result);
             } catch(error) {
                 console.log("유저 목록 실패: " + error)
@@ -19,7 +19,7 @@ export default function UserList() {
     }, []);
 
     const sendDm = async(userId) => {
-        await FetchPost("/send-dm", { userId: String(userId) });
+        await FetchPostAuth("/send-dm", { userId: String(userId) });
     }
 
     return (

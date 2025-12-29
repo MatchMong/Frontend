@@ -1,6 +1,5 @@
 "use client";
 
-import "../globals.css";
 import { useState, useEffect } from "react";
 // import { SquarePen } from "lucide-react";
 import ProfileHeader from "../components/profile/ProfileHeader";
@@ -10,7 +9,8 @@ import ActivityStats from "../components/profile/ActivityStats";
 import ProfileImage from "../components/profile/ProfileImage";
 import ProfileBasicInfo from "../components/profile/ProfileBasicInfo";
 import ProfilePersonalInfo from "../components/profile/ProfilePersonalInfo";
-import { MainHeader } from "../components"
+import { MainHeader } from "../components";
+import { FetchGetAuth } from "../hook/Fetch";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
@@ -20,13 +20,15 @@ const ProfilePage = () => {
 
   // 데이터 가져 옴
   useEffect(() => {
-    const fetchProfile = async () => {
-      const res = await fetch("/api/profile");
-      const data = await res.json();
-      setProfile(data);
-      setEditProfile(data);
+    const Profile1 = async () => {
+        try {
+            const res = await FetchGetAuth(`/api/profile/me`, null);
+            setProfile(res);
+        } catch(error) {
+            console.log("프로필 불러오기 실패: " + error)
+        }
     };
-    fetchProfile();
+    Profile1();
   }, []);
 
   // 변경
@@ -41,20 +43,30 @@ const ProfilePage = () => {
   const handleSave = async () => {
     try {
       setIsSaving(true);
-      await fetch("/api/profile", {
+      const accessToken = localStorage.getItem("accessToken");
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify(editProfile),
       });
+
+      if (!res.ok) throw new Error(await res.text());
+
       setProfile(editProfile);
       setEditing(false);
       alert("프로필이 수정되었습니다.");
-    } catch {
+    } catch (e) {
       alert("저장 실패");
+      console.log(e);
     } finally {
       setIsSaving(false);
     }
   };
+
 
   // 취소
   const handleCancel = () => {
@@ -62,7 +74,18 @@ const ProfilePage = () => {
     setEditing(false);
   };
 
-  if (!editProfile) return null;
+  useEffect(() => {
+    const Profile1 = async () => {
+      try {
+        const res = await FetchGetAuth(`/api/profile/me`, null);
+        setProfile(res);
+        setEditProfile(res);
+      } catch (error) {
+        console.log("프로필 불러오기 실패: " + error);
+      }
+    };
+    Profile1();
+  }, []);
 
   return (
     <div className="bg-[#EAEDFF]">
@@ -78,8 +101,8 @@ const ProfilePage = () => {
         {/* 프로필 */}
         <ProfileContainer className="p-8">
           <ProfileImage
-            profileImg={editProfile.profileImg}
-            name={editProfile.name}
+            profileImg={editProfile}
+            name={editProfile}
             setProfileImg={(img) => handleChange("profileImg", img)}
             isEditing={isEditing}
           />

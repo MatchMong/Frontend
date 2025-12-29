@@ -2,8 +2,12 @@ import { SEARCH, SimpleCalendar } from "./index"
 import { UserCard } from "../main/Modal";
 import { useEffect, useState } from "react";
 
-export const ASIDE = ({ userList, roomModal }) => {
+export const ASIDE = ({ userList, roomModal, search }) => {
     const [listmodal, setListmodal] = useState(false);
+
+    const handelChangeSearch = (e) => {
+        search(e.target.value)
+    }
 
     const handleRoomClick = (() => {
         roomModal((prev) => !prev);
@@ -20,6 +24,7 @@ export const ASIDE = ({ userList, roomModal }) => {
                 iconSize="28"
                 iconPosition="left"
                 placeholder="팀 또는 프로젝트 검색"
+                onChange={(e) => handelChangeSearch(e)}
             />
             <button
                 className="w-70 h-14 bg-white p-4 rounded-xl shadow-[0_4px_4px_1px_rgba(0,0,0,0.08)] cursor-pointer"

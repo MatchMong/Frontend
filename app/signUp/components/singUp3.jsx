@@ -116,7 +116,7 @@ export const SignUp3 = ({ password, click, discordId }) => {
                 />
                 <BUTTON
                     label="회원가입 완료"
-                    activate={passwordsMatch}
+                    activate={passwordsMatch && dId}
                     onClick={() => handleClick()}
                 />
                 <p className="text-center text-[#777C89] font-medium">이미 계정이 있으신가요? <a onClick={() => router.push("/login")} className="text-[#3290FF] underline cursor-pointer font-medium">로그인</a></p>

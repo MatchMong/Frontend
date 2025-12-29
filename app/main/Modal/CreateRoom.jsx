@@ -1,6 +1,6 @@
 import { INPUT } from "../../components"
-import { useState } from "react"
-import { FetchPostAuth } from "../../hook/Fetch"
+import { useState, useEffect } from "react"
+import { FetchPostAuth, FetchGetAuth } from "../../hook/Fetch"
 
 export const CreateRoom = ({
     closeClick,
@@ -9,8 +9,61 @@ export const CreateRoom = ({
     const [roomtitle, setRoomtitle] = useState("");
     const [roomcount, setRoomcount] = useState("");
     const [roomwrite, setRoomwrite] = useState("");
+    const [discordId, setDiscordId] = useState("");
+    const [discordUniqueId, setDiscordUniqueId] = useState("");
 
     const MAX_DESC = 50;
+
+    const refreshPage = () => window.location.reload();
+
+    const norm = (v) => String(v ?? "").trim();
+    const toArray = (res) => (Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []);
+
+    useEffect(() => { 
+        const dId = async() => { 
+            try { 
+                const res = await FetchGetAuth("/api/user/discord-id", null); 
+                const v = typeof res === "string" ? res : (res?.data ?? res?.discordId ?? "");
+                setDiscordId(norm(v));
+            } catch (error) { 
+                console.log("디스코드 아이디 불러오기 실패: " + error) 
+            } 
+        }
+        
+        dId(); 
+    }, []);
+
+    useEffect(() => {
+  const fetchUniqueId = async () => {
+    try {
+      const did = String(discordId ?? "").trim();
+      if (!did) {
+        setDiscordUniqueId("");
+        console.log("[discordUniqueId] discordId 비어있음 -> ''");
+        return;
+      }
+      const res = await FetchGetAuth("/api/members", null);
+      const members = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : []);
+      const [didName, didDisc] = did.includes("#") ? did.split("#") : [did, ""];
+      const me = members.find((m) => {
+        const u = String(m?.username ?? "").trim();
+        const d = String(m?.discriminator ?? "").trim();
+        if (!u || !d) return false;
+        if (!didDisc) return u === didName;
+        return u === didName && d === didDisc;
+      });
+
+      const unique = String(me?.id ?? "").trim();
+      setDiscordUniqueId(unique);
+    } catch (error) {
+      console.log("멤버 고유 아이디 불러오기 실패:", error);
+      setDiscordUniqueId("");
+    }
+  };
+
+  fetchUniqueId();
+}, [discordId]);
+
 
     const onRoomCountChange = (e) => {
         const onlyDigits = e.target.value.replace(/\D/g, "");
@@ -22,18 +75,21 @@ export const CreateRoom = ({
     };
 
     const handleCreateRoom = async () => {
-    try {
-        const parsed = Number(roomcount);
-        const maxParticipants =
-        roomcount == null || roomcount === "" || !Number.isFinite(parsed) || parsed === 0
-            ? 999
-            : parsed;
-        await FetchPostAuth("/api/rooms", {
-            roomtitle,
-            maxParticipants,
-            roomwrite,
-        });
-            success(true);
+        try {
+            const parsed = Number(roomcount);
+            const maxParticipants =
+            roomcount == null || roomcount === "" || !Number.isFinite(parsed) || parsed === 0
+                ? 999
+                : parsed;
+            await FetchPostAuth("/api/rooms", {
+                roomtitle,
+                maxParticipants,
+                roomwrite,
+                discordId: discordUniqueId,
+            });
+                success(true);
+                refreshPage();
+
         } catch (error) {
             console.log("방 생성 실패: " + error);
         }

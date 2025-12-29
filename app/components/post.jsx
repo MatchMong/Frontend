@@ -55,17 +55,22 @@
 import { useState, useEffect } from "react";
 import { FetchGetAuth } from "../hook/Fetch";
 
-export const POST = ({ title, label, user, onUserClick, roomId, ownerId, onClick, ...postProps }) => {
+export const POST = ({ title, label, user, onUserClick, roomId, ownerId, onClick, hidden, ...postProps }) => {
   const [userList, setUserList] = useState([]);
-  const [myDiscordId, setMyDiscordId] = useState("");
+  const [myDiscordId, setMyDiscordId] = useState("");          // username 또는 username#tag
+  const [myDiscordUniqueId, setMyDiscordUniqueId] = useState(""); // 숫자 snowflake
   const [loading, setLoading] = useState(true);
+  
+
+  const norm = (v) => String(v ?? "").trim();
+  const isSnowflake = (v) => /^\d{15,20}$/.test(norm(v));
 
   useEffect(() => {
     const fetchMine = async () => {
       try {
         const res = await FetchGetAuth("/api/user/discord-id", null);
         const val = typeof res === "string" ? res : (res?.discordId ?? res?.data ?? "");
-        setMyDiscordId(String(val ?? "").trim());
+        setMyDiscordId(norm(val));
       } catch (e) {
         console.log("내 디코 아이디 조회 실패:", e);
         setMyDiscordId("");
@@ -74,6 +79,39 @@ export const POST = ({ title, label, user, onUserClick, roomId, ownerId, onClick
 
     fetchMine();
   }, []);
+
+  // ✅ 내 username -> 내 고유ID(snowflake)로 변환
+  useEffect(() => {
+    const fetchMyUnique = async () => {
+      try {
+        const did = norm(myDiscordId);
+        if (!did) {
+          setMyDiscordUniqueId("");
+          return;
+        }
+
+        const res = await FetchGetAuth("/api/members", null);
+        const members = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : []);
+
+        const [didName, didDisc] = did.includes("#") ? did.split("#") : [did, ""];
+
+        const me = members.find((m) => {
+          const u = norm(m?.username);
+          const d = norm(m?.discriminator);
+          if (!u || !d) return false;
+          if (!didDisc) return u === didName;
+          return u === didName && d === didDisc;
+        });
+
+        setMyDiscordUniqueId(norm(me?.id));
+      } catch (e) {
+        console.log("내 디코 고유ID 조회 실패:", e);
+        setMyDiscordUniqueId("");
+      }
+    };
+
+    fetchMyUnique();
+  }, [myDiscordId]);
 
   useEffect(() => {
     const fetchParticipants = async () => {
@@ -93,21 +131,26 @@ export const POST = ({ title, label, user, onUserClick, roomId, ownerId, onClick
     else setLoading(false);
   }, [roomId]);
 
-  const isOwner = myDiscordId !== "" && String(myDiscordId) === String(ownerId);
+  // ✅ ownerId(숫자) vs myDiscordUniqueId(숫자)
+  const isOwner =
+    isSnowflake(ownerId) &&
+    isSnowflake(myDiscordUniqueId) &&
+    norm(ownerId) === norm(myDiscordUniqueId);
 
+  const myKeys = [myDiscordUniqueId, myDiscordId].map(norm).filter(Boolean);
   const exists =
-    myDiscordId !== "" &&
-    userList.some((p) => String(p.userDiscordId ?? "").trim() === String(myDiscordId));
+  myKeys.length > 0 &&
+  userList.some((p) => {
+    const key = norm(p?.userDiscordId ?? p?.discordId ?? p?.id ?? "");
+    return myKeys.includes(key);
+  });
 
   const isFull = user > 0 && userList.length >= user;
 
   const disabled = loading || isOwner || exists || isFull;
 
   return (
-    <div
-      className="flex flex-col justify-between items-center bg-white rounded-[20px] px-5 pt-4 pb-6 shadow-[0_4px_4px_1px_rgba(0,0,0,0.08)]"
-      {...postProps}
-    >
+    <div className={`flex flex-col justify-between items-center bg-white rounded-[20px] px-5 pt-4 pb-6 shadow-[0_4px_4px_1px_rgba(0,0,0,0.08)] ${hidden}`} {...postProps}>
       <div className="w-full">
         <PostHeader title={title} label={label} user={user} onUserClick={onUserClick} />
       </div>
@@ -130,6 +173,7 @@ export const POST = ({ title, label, user, onUserClick, roomId, ownerId, onClick
 };
 
 
+
 export const PostHeader = ({title, label, user, onUserClick}) => {
     return(
         <div>
@@ -145,7 +189,7 @@ export const PostHeader = ({title, label, user, onUserClick}) => {
             <p className="pt-3 pb-4 text-[#777B86] text-xs font-medium font-pretendard">{label}</p>
             <div className="flex flex-row justify-start items-center gap-1">
                 <img src="./icon/user(gray).svg"/>
-                {user!==0 ? 
+                {user!==0 || user!==999 ? 
                 (<p onClick={onUserClick} className="text-[#777B86] text-[14px] font-pretendard font-medium cursor-pointer">최대 {user}명까지 참가 가능</p>
                 ) : (
                 <p onClick={onUserClick} className="text-[#777B86] text-[14px] font-pretendard font-medium cursor-pointer">인원 제한 없음</p>

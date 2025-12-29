@@ -12,12 +12,17 @@ export default function HomePage() {
     const [userModal, setUserModal] = useState(false);
     const [roomModal, setRoomModal] = useState(false);
     const [base, setBase] = useState(null);
+    const [discordId, setDiscordId] = useState();
     const [room, setRoom] = useState([]);
     const [userList, setUserList] = useState([]);
     const [selectedRoomId, setSelectedRoomId] = useState(null);
     const [selectedRoomTitle, setSelectedRoomTitle] = useState(null);
+    const [selectedOwnerId ,setSelectedOwnerId] = useState("");
+    const [search, setSearch] = useState("");
 
     const router = useRouter();
+
+    const refreshPage = () => window.location.reload();
 
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken");
@@ -56,10 +61,23 @@ export default function HomePage() {
         UserList();
     }, []);
 
+    useEffect(() => { 
+        const dId = async() => { 
+            try { 
+                const res = await FetchGetAuth("/api/user/discord-id", null); 
+                setDiscordId(res); 
+            } catch (error) { 
+                console.log("디스코드 아이디 불러오기 실패: " + error) 
+            } 
+        }
+        
+        dId(); 
+    }, []);
+
     const handleJoin = async(rid) => {
         try {
-            const res = await FetchPostAuth(`/api/rooms/${rid}/join`, null);
-            setRoom(res);
+            await FetchPostAuth(`/api/rooms/${rid}/join`, null);
+            refreshPage();
         } catch (error) {
             console.log("방 참가 요청 실패: " + error)
         }
@@ -73,9 +91,10 @@ export default function HomePage() {
         setBase({ w: window.innerWidth, h: window.innerHeight });
     }, []);
 
-    const handleUserClick = (rid, rti) => {
+    const handleUserClick = (rid, rti, oid) => {
         setSelectedRoomId(rid);
         setSelectedRoomTitle(rti);
+        setSelectedOwnerId(oid);
         setUserModal(true);
     };
 
@@ -97,11 +116,12 @@ export default function HomePage() {
                     <div className="w-full h-22"></div>
                     <div className="w-full h-[calc(100%-244px)] flex flex-row pl-15 pr-16">
                         <ASIDE
+                            search={setSearch}
                             userList={userList}
                             roomModal={handleRoomClick}
                         />
                         <div ref={gridRef} className="w-full ml-15 grid grid-cols-2 gap-x-12 gap-y-13 overflow-y-auto pr-2" style={{ gridAutoRows: `${(gridHeight-52)/2}px` }}>
-                            {room?.map((r) => (
+                            {[...room].reverse().map((r) => (
                                 <POST
                                     key={r.roomId}
                                     title={r.roomtitle}
@@ -109,8 +129,9 @@ export default function HomePage() {
                                     user={r.maxParticipants ?? 0}
                                     roomId={r.roomId}
                                     ownerId={r.ownerId}
-                                    onClick={() => handleJoin(r.roomId)}
-                                    onUserClick={() => handleUserClick(r.roomId, r.roomtitle)}
+                                    onClick={() => handleJoin(r.roomId, discordId)}
+                                    onUserClick={() => handleUserClick(r.roomId, r.roomtitle, r.ownerId)}
+                                    // hidden={r.title == search && search!="" ? "hidden" : ""}
                                 />
                             ))}
                         </div>
@@ -121,6 +142,7 @@ export default function HomePage() {
                         <UserList
                             roomId={selectedRoomId}
                             roomTitle={selectedRoomTitle}
+                            ownerId={selectedOwnerId}
                             closeClick={closeUserModal}
                         />
                     )}
