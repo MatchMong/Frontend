@@ -13,6 +13,7 @@ export default function HomePage() {
     const [roomModal, setRoomModal] = useState(false);
     const [base, setBase] = useState(null);
     const [room, setRoom] = useState([]);
+    const [userList, setUserList] = useState([]);
     const [selectedRoomId, setSelectedRoomId] = useState(null);
     const [selectedRoomTitle, setSelectedRoomTitle] = useState(null);
 
@@ -40,6 +41,19 @@ export default function HomePage() {
         }
 
         Room();
+    }, []);
+
+    useEffect(() => {
+        const UserList = async () => {
+            try {
+                const res = await FetchGetAuth(`/api/users/profiles`, null);
+                setUserList(res);
+            } catch(error) {
+                console.log("유저 목록 불러오기 실패: " + error)
+            }
+        };
+
+        UserList();
     }, []);
 
     const handleJoin = async(rid) => {
@@ -83,6 +97,7 @@ export default function HomePage() {
                     <div className="w-full h-22"></div>
                     <div className="w-full h-[calc(100%-244px)] flex flex-row pl-15 pr-16">
                         <ASIDE
+                            userList={userList}
                             roomModal={handleRoomClick}
                         />
                         <div ref={gridRef} className="w-full ml-15 grid grid-cols-2 gap-x-12 gap-y-13 overflow-y-auto pr-2" style={{ gridAutoRows: `${(gridHeight-52)/2}px` }}>

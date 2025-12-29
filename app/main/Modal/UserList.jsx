@@ -135,7 +135,7 @@ export const UserList = ({ closeClick, roomId, roomTitle }) => {
 // }
 export const UserCard = ({
   user,
-  specialty,
+  major,
   bg = "F5F7F9",
   cardP = 12,
   ml,
@@ -169,21 +169,13 @@ export const UserCard = ({
 
           <div className="ml-5">
             <p className={`text-[${nameText}px] font-medium font-pretendard`}>{user ?? "이름"}</p>
-            <p className="text-[#777B86] text-[14px] font-pretendard">{specialty ?? "전공"}</p>
+            <p className="text-[#777B86] text-[14px] font-pretendard">{major ?? "전공"}</p>
           </div>
         </div>
       )}
 
       {onlyUser && (
         <div className="relative flex">
-          <button
-            type="button"
-            onClick={onTrashClick}
-            className="absolute right-5 top-6 cursor-pointer"
-          >
-            <img src="icon/trash.svg" alt="delete" />
-          </button>
-
           <div className="relative flex justify-center items-center">
             <p className={`absolute text-white text-[${profileText}px] font-pretendard font-bold`}>
               {firstChar}
@@ -193,7 +185,7 @@ export const UserCard = ({
 
           <div style={{ marginLeft: `${ml}px` }}>
             <p className={`text-[${nameText}px] font-medium font-pretendard`}>{user ?? "이름"}</p>
-            <p className={`text-[#777B86] text-[${specialtyText}px] font-pretendard`}>{specialty ?? "전공"}</p>
+            <p className={`text-[#777B86] text-[${specialtyText}px] font-pretendard`}>{major ?? "전공"}</p>
           </div>
         </div>
       )}
