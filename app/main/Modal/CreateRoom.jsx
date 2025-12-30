@@ -106,7 +106,7 @@ export const CreateRoom = ({
                         labelColor={"777B86"}
                         value={roomtitle}
                         maxlength={15}
-                        rightInnerText={`${roomwrite.length}/15`}
+                        rightInnerText={`${roomtitle.length}/15`}
                         onChange={(e) => setRoomtitle(e.target.value)}
                     />
                     <INPUT
