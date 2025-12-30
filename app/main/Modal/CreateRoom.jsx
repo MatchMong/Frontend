@@ -39,7 +39,6 @@ export const CreateRoom = ({
       const did = String(discordId ?? "").trim();
       if (!did) {
         setDiscordUniqueId("");
-        console.log("[discordUniqueId] discordId 비어있음 -> ''");
         return;
       }
       const res = await FetchGetAuth("/api/members", null);
@@ -106,12 +105,15 @@ export const CreateRoom = ({
                         label={"팀 이름"}
                         labelColor={"777B86"}
                         value={roomtitle}
+                        maxlength={15}
+                        rightInnerText={`${roomwrite.length}/15`}
                         onChange={(e) => setRoomtitle(e.target.value)}
                     />
                     <INPUT
                         label={"팀 최대 인원 수"}
                         labelColor={"777B86"}
                         value={roomcount}
+                        maxlength={3}
                         inputMode="numeric"
                         onChange={onRoomCountChange}
                     />

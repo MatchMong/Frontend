@@ -102,8 +102,6 @@ export const POST = ({ title, label, user, onUserClick, roomId, ownerId, onClick
           if (!didDisc) return u === didName;
           return u === didName && d === didDisc;
         });
-
-        setMyDiscordUniqueId(norm(me?.id));
       } catch (e) {
         console.log("내 디코 고유ID 조회 실패:", e);
         setMyDiscordUniqueId("");

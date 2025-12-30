@@ -24,9 +24,6 @@ const ProfilePage = () => {
 
         setProfile(me ?? null);
         setEditProfile(me ?? null);
-
-        console.log("res:", res);
-        console.log("me:", me);
       } catch (error) {
         console.log("프로필 불러오기 실패:", error);
       }
