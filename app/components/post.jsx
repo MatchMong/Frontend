@@ -187,7 +187,7 @@ export const PostHeader = ({title, label, user, onUserClick}) => {
             <p className="pt-3 pb-4 text-[#777B86] text-xs font-medium font-pretendard">{label}</p>
             <div className="flex flex-row justify-start items-center gap-1">
                 <img src="./icon/user(gray).svg"/>
-                {user!==0 || user!==999 ? 
+                {user!==0 && user!==999 ? 
                 (<p onClick={onUserClick} className="text-[#777B86] text-[14px] font-pretendard font-medium cursor-pointer">최대 {user}명까지 참가 가능</p>
                 ) : (
                 <p onClick={onUserClick} className="text-[#777B86] text-[14px] font-pretendard font-medium cursor-pointer">인원 제한 없음</p>
