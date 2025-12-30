@@ -22,11 +22,11 @@ export default function ProfilePersonalInfo({ data, isEditing, onChange, handleS
                 value={safeData[key] || ""}
                 placeholder={safeData[key] ? "" : `${labelMapping[key] || key}`}
                 onChange={(e) => onChange(key, e.target.value)}
-                className="flex border rounded-lg p-2 rounded w-full bg-gray-100 mb-10 p-2"
+                className="flex border rounded-lg p-2 w-full bg-gray-100 mb-10"
                 style={{ width: "348px", height: "44px" }}
               />
             ) : (
-              <p className="flex bg-[#F6F6F6] rounded-lg w-[348px] h-[44px] mb-10 p-2 ">{safeData[key] || "정보 없음"}</p>
+              <p className="flex bg-[#F6F6F6] rounded-lg w-[348px] h-1 mb-10 p-2 ">{safeData[key] || "정보 없음"}</p>
             )}
           </div>
         ))}
