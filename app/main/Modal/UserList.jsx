@@ -105,7 +105,6 @@ export const UserList = ({ closeClick, roomId, roomTitle, nickname, ownerId }) =
 
       const unique = String(me?.id ?? "").trim();
       setMyDiscordUniqueId(unique);
-      console.log("[myDiscordUniqueId]", unique);
     } catch (e) {
       console.log("내 디코 고유ID 조회 실패:", e);
       setMyDiscordUniqueId("");
